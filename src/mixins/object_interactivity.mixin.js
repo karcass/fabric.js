@@ -1,9 +1,7 @@
 (function() {
 
-  var degreesToRadians = fabric.util.degreesToRadians,
-      /* eslint-disable camelcase */
-      isVML = function() { return typeof G_vmlCanvasManager !== 'undefined'; };
-      /* eslint-enable camelcase */
+  var degreesToRadians = fabric.util.degreesToRadians;
+
   fabric.util.object.extend(fabric.Object.prototype, /** @lends fabric.Object.prototype */ {
 
     /**
@@ -107,83 +105,6 @@
       }
     },
 
-    /*
-     * Calculate object dimensions from its properties
-     * @private
-     */
-    _getNonTransformedDimensions: function() {
-      var strokeWidth = this.strokeWidth,
-          w = this.width,
-          h = this.height,
-          addStrokeToW = true,
-          addStrokeToH = true;
-
-      if (this.type === 'line' && this.strokeLineCap === 'butt') {
-        addStrokeToH = w;
-        addStrokeToW = h;
-      }
-
-      if (addStrokeToH) {
-        h += h < 0 ? -strokeWidth : strokeWidth;
-      }
-
-      if (addStrokeToW) {
-        w += w < 0 ? -strokeWidth : strokeWidth;
-      }
-
-      return { x: w, y: h };
-    },
-
-    /*
-     * @private
-     */
-    _getTransformedDimensions: function(skewX, skewY) {
-      if (typeof skewX === 'undefined') {
-        skewX = this.skewX;
-      }
-      if (typeof skewY === 'undefined') {
-        skewY = this.skewY;
-      }
-      var dimensions = this._getNonTransformedDimensions(),
-          dimX = dimensions.x / 2, dimY = dimensions.y / 2,
-          points = [
-            {
-              x: -dimX,
-              y: -dimY
-            },
-            {
-              x: dimX,
-              y: -dimY
-            },
-            {
-              x: -dimX,
-              y: dimY
-            },
-            {
-              x: dimX,
-              y: dimY
-            }],
-          i, transformMatrix = this._calcDimensionsTransformMatrix(skewX, skewY, false),
-          bbox;
-      for (i = 0; i < points.length; i++) {
-        points[i] = fabric.util.transformPoint(points[i], transformMatrix);
-      }
-      bbox = fabric.util.makeBoundingBoxFromPoints(points);
-      return { x: bbox.width, y: bbox.height };
-    },
-
-    /*
-     * private
-     */
-    _calculateCurrentDimensions: function()  {
-      var vpt = this.getViewportTransform(),
-          dim = this._getTransformedDimensions(),
-          w = dim.x, h = dim.y,
-          p = fabric.util.transformPoint(new fabric.Point(w, h), vpt, true);
-
-      return p.scalarAdd(2 * this.padding);
-    },
-
     /**
      * Draws a colored layer behind the object, inside its selection borders.
      * Requires public options: padding, selectionBackgroundColor
@@ -193,8 +114,7 @@
      * @chainable
      */
     drawSelectionBackground: function(ctx) {
-      if (!this.selectionBackgroundColor || this.group
-        || this !== this.canvas.getActiveObject()) {
+      if (!this.selectionBackgroundColor || this.group || !this.active) {
         return this;
       }
       ctx.save();
@@ -271,8 +191,8 @@
           matrix = fabric.util.customTransformMatrix(options.scaleX, options.scaleY, options.skewX),
           wh = fabric.util.transformPoint(p, matrix),
           strokeWidth = 1 / this.borderScaleFactor,
-          width = wh.x + strokeWidth + 2 * this.padding,
-          height = wh.y + strokeWidth + 2 * this.padding;
+          width = wh.x + strokeWidth,
+          height = wh.y + strokeWidth;
 
       ctx.save();
       this._setLineDash(ctx, this.borderDashArray, null);
@@ -390,7 +310,7 @@
           }
           break;
         default:
-          isVML() || this.transparentCorners || ctx.clearRect(left, top, size, size);
+          this.transparentCorners || ctx.clearRect(left, top, size, size);
           ctx[methodName + 'Rect'](left, top, size, size);
           if (stroke) {
             ctx.strokeRect(left, top, size, size);

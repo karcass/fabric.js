@@ -85,7 +85,14 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     }
     e.stopImmediatePropagation();
     e.preventDefault();
-    this.canvas && this.canvas.renderAll();
+    if (e.keyCode >= 33 && e.keyCode <= 40) {
+      // if i press an arrow key just update selection
+      this.clearContextTop();
+      this.renderCursorOrSelection();
+    }
+    else {
+      this.canvas && this.canvas.renderAll();
+    }
   },
 
   /**
@@ -198,9 +205,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
     }
 
     fabric.copiedText = selectedText;
-    fabric.copiedTextStyle = this.getSelectionStyles(
-                          this.selectionStart,
-                          this.selectionEnd);
+    fabric.copiedTextStyle = this.getSelectionStyles(this.selectionStart, this.selectionEnd);
     e.stopImmediatePropagation();
     e.preventDefault();
     this._copyDone = true;
@@ -611,6 +616,7 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
       this._removeCharsFromTo(this.selectionStart, this.selectionEnd);
     }
 
+    this.set('dirty', true);
     this.setSelectionEnd(this.selectionStart);
 
     this._removeExtraneousStyles();

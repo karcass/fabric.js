@@ -2,7 +2,7 @@
 
   function getAbsolutePath(path) {
     var isAbsolute = /^https?:/.test(path);
-    if (isAbsolute) { return path };
+    if (isAbsolute) { return path; };
     var imgEl = _createImageElement();
     imgEl.src = path;
     var src = imgEl.src;
@@ -49,7 +49,7 @@
   // };
 
   function _createImageElement() {
-    return fabric.isLikelyNode ? new (require('canvas').Image)() : fabric.document.createElement('img');
+    return fabric.isLikelyNode ? new (require(fabric.canvasModule).Image)() : fabric.document.createElement('img');
   }
 
   function _createImageObject(width, height, callback) {
@@ -68,7 +68,7 @@
   function setSrc(img, src, callback) {
     if (fabric.isLikelyNode) {
       require('fs').readFile(src, function(err, imgData) {
-        if (err) { throw err };
+        if (err) { throw err; };
         img.src = imgData;
         callback && callback();
       });

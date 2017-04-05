@@ -1,12 +1,27 @@
 (function() {
 
-  var EMPTY_JSON = '{"objects":[],"background":""}';
+  var EMPTY_JSON = '{"objects":[]}';
 
   // var emptyImageCanvasData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAH7ElEQVR4nO3VMQ0AMAzAsPInvYHoMS2yEeTLHADge/M6AADYM3QACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIuMjH4b7osLFBAAAAAElFTkSuQmCC";
 
   var PATH_JSON = '{"objects": [{"type": "path", "originX": "left", "originY": "top", "left": 268, "top": 266, "width": 51, "height": 49,' +
                   ' "fill": "rgb(0,0,0)", "stroke": null, "strokeWidth": 1, "scaleX": 1, "scaleY": 1, ' +
                   '"angle": 0, "flipX": false, "flipY": false, "opacity": 1, "path": [["M", 18.511, 13.99],' +
+                  ' ["c", 0, 0, -2.269, -4.487, -12.643, 4.411], ["c", 0, 0, 4.824, -14.161, 19.222, -9.059],' +
+                  ' ["l", 0.379, -2.1], ["c", -0.759, -0.405, -1.375, -1.139, -1.645, -2.117], ["c", -0.531, ' +
+                  '-1.864, 0.371, -3.854, 1.999, -4.453], ["c", 0.312, -0.118, 0.633, -0.169, 0.953, -0.169], ' +
+                  '["c", 1.299, 0, 2.514, 0.953, 2.936, 2.455], ["c", 0.522, 1.864, -0.372, 3.854, -1.999, ' +
+                  '4.453], ["c", -0.229, 0.084, -0.464, 0.127, -0.692, 0.152], ["l", -0.379, 2.37], ["c", ' +
+                  '1.146, 0.625, 2.024, 1.569, 2.674, 2.758], ["c", 3.213, 2.514, 8.561, 4.184, 11.774, -8.232],' +
+                  ' ["c", 0, 0, 0.86, 16.059, -12.424, 14.533], ["c", 0.008, 2.859, 0.615, 5.364, -0.076, 8.224],' +
+                  ' ["c", 8.679, 3.146, 15.376, 14.389, 17.897, 18.168], ["l", 2.497, -2.151], ["l", 1.206, 1.839],' +
+                  ' ["l", -3.889, 3.458], ["C", 46.286, 48.503, 31.036, 32.225, 22.72, 35.81], ["c", -1.307, 2.851,' +
+                  ' -3.56, 6.891, -7.481, 8.848], ["c", -4.689, 2.336, -9.084, -0.802, -11.277, -2.868], ["l",' +
+                  ' -1.948, 3.104], ["l", -1.628, -1.333], ["l", 3.138, -4.689], ["c", 0.025, 0, 9, 1.932, 9, 1.932], ' +
+                  '["c", 0.877, -9.979, 2.893, -12.905, 4.942, -15.621], ["C", 17.878, 21.775, 18.713, 17.397, 18.511, ' +
+                  '13.99], ["z", null]]}], "background": "#ff5555","overlay": "rgba(0,0,0,0.2)"}';
+
+  var PATH_WITHOUT_DEFAULTS_JSON = '{"objects": [{"type": "path", "left": 268, "top": 266, "width": 51, "height": 49, "path": [["M", 18.511, 13.99],' +
                   ' ["c", 0, 0, -2.269, -4.487, -12.643, 4.411], ["c", 0, 0, 4.824, -14.161, 19.222, -9.059],' +
                   ' ["l", 0.379, -2.1], ["c", -0.759, -0.405, -1.375, -1.139, -1.645, -2.117], ["c", -0.531, ' +
                   '-1.864, 0.371, -3.854, 1.999, -4.453], ["c", 0.312, -0.118, 0.633, -0.169, 0.953, -0.169], ' +
@@ -41,7 +56,7 @@
   var PATH_DATALESS_JSON = '{"objects":[{"type":"path","originX":"left","originY":"top","left":100,"top":100,"width":200,"height":200,"fill":"rgb(0,0,0)",' +
                            '"stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,' +
                            '"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,' +
-                           '"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"path":"http://example.com/","pathOffset":{"x":200,"y":200}}],"background":""}';
+                           '"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"pathOffset":{"x":200,"y":200},"path":"http://example.com/"}]}';
 
   var RECT_JSON = '{"objects":[{"type":"rect","originX":"left","originY":"top","left":0,"top":0,"width":10,"height":10,"fill":"rgb(0,0,0)",' +
                   '"stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,' +
@@ -49,12 +64,12 @@
                   '"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"rx":0,"ry":0}],"background":"#ff5555","overlay":"rgba(0,0,0,0.2)"}';
 
   function _createImageElement() {
-    return fabric.isLikelyNode ? new (require('canvas').Image)() : fabric.document.createElement('img');
+    return fabric.isLikelyNode ? new (require(fabric.canvasModule).Image)() : fabric.document.createElement('img');
   }
 
   function getAbsolutePath(path) {
     var isAbsolute = /^https?:/.test(path);
-    if (isAbsolute) { return path };
+    if (isAbsolute) { return path; };
     var imgEl = _createImageElement();
     imgEl.src = path;
     var src = imgEl.src;
@@ -256,9 +271,17 @@
     equal(canvas.isEmpty(), true, 'canvas should be empty');
   });
 
+  test('remove actual hovered target', function() {
+    var rect1 = makeRect();
+    canvas.add(rect1);
+    canvas._hoveredTarget = rect1;
+    canvas.remove(rect1);
+    equal(canvas._hoveredTarget, null, 'reference to hovered target should be removed');
+  });
+
   test('before:selection:cleared', function() {
     var isFired = false;
-    canvas.on('before:selection:cleared', function() { isFired = true });
+    canvas.on('before:selection:cleared', function() { isFired = true; });
 
     canvas.add(new fabric.Rect());
     canvas.remove(canvas.item(0));
@@ -274,7 +297,7 @@
 
   test('selection:cleared', function() {
     var isFired = false;
-    canvas.on('selection:cleared', function() { isFired = true });
+    canvas.on('selection:cleared', function() { isFired = true; });
 
     canvas.add(new fabric.Rect());
     canvas.remove(canvas.item(0));
@@ -286,6 +309,17 @@
     canvas.remove(canvas.item(0));
 
     equal(isFired, true, 'removing active object should fire "selection:cleared"');
+  });
+
+  test('setActiveObject fires deselected', function() {
+    var isFired = false;
+    var rect1 = new fabric.Rect();
+    var rect2 = new fabric.Rect();
+    rect1.on('deselected', function() { isFired = true; });
+
+    canvas.setActiveObject(rect1);
+    canvas.setActiveObject(rect2);
+    equal(isFired, true, 'switching active group fires deselected');
   });
 
   test('getContext', function() {
@@ -669,7 +703,6 @@
   test('toObject', function() {
     ok(typeof canvas.toObject == 'function');
     var expectedObject = {
-      background: canvas.backgroundColor,
       objects: canvas.getObjects()
     };
     deepEqual(expectedObject, canvas.toObject());
@@ -683,7 +716,6 @@
   test('toDatalessObject', function() {
     ok(typeof canvas.toDatalessObject == 'function');
     var expectedObject = {
-      background: canvas.backgroundColor,
       objects: canvas.getObjects()
     };
     deepEqual(expectedObject, canvas.toDatalessObject());
@@ -702,10 +734,9 @@
     ok(!canvas.isEmpty());
   });
 
-  test('loadFromJSON with json string', function() {
+  asyncTest('loadFromJSON with json string Canvas', function() {
     ok(typeof canvas.loadFromJSON == 'function');
-
-    canvas.loadFromJSON(PATH_JSON, function(){
+    canvas.loadFromJSON(PATH_JSON, function() {
       var obj = canvas.item(0);
 
       ok(!canvas.isEmpty(), 'canvas is not empty');
@@ -718,21 +749,20 @@
       equal(obj.get('width'), 49.803999999999995);
       equal(obj.get('height'), 48.027);
       equal(obj.get('fill'), 'rgb(0,0,0)');
-      equal(obj.get('stroke'), null);
-      equal(obj.get('strokeWidth'), 1);
-      equal(obj.get('scaleX'), 1);
-      equal(obj.get('scaleY'), 1);
-      equal(obj.get('angle'), 0);
-      equal(obj.get('flipX'), false);
-      equal(obj.get('flipY'), false);
-      equal(obj.get('opacity'), 1);
+      strictEqual(obj.get('stroke'), null);
+      strictEqual(obj.get('strokeWidth'), 1);
+      strictEqual(obj.get('scaleX'), 1);
+      strictEqual(obj.get('scaleY'), 1);
+      strictEqual(obj.get('angle'), 0);
+      strictEqual(obj.get('flipX'), false);
+      strictEqual(obj.get('flipY'), false);
+      strictEqual(obj.get('opacity'), 1);
       ok(obj.get('path').length > 0);
+      start();
     });
   });
 
-  test('loadFromJSON with json object', function() {
-    ok(typeof canvas.loadFromJSON == 'function');
-
+  asyncTest('loadFromJSON with json object', function() {
     canvas.loadFromJSON(JSON.parse(PATH_JSON), function(){
       var obj = canvas.item(0);
 
@@ -746,21 +776,49 @@
       equal(obj.get('width'), 49.803999999999995);
       equal(obj.get('height'), 48.027);
       equal(obj.get('fill'), 'rgb(0,0,0)');
-      equal(obj.get('stroke'), null);
-      equal(obj.get('strokeWidth'), 1);
-      equal(obj.get('scaleX'), 1);
-      equal(obj.get('scaleY'), 1);
-      equal(obj.get('angle'), 0);
-      equal(obj.get('flipX'), false);
-      equal(obj.get('flipY'), false);
-      equal(obj.get('opacity'), 1);
+      strictEqual(obj.get('stroke'), null);
+      strictEqual(obj.get('strokeWidth'), 1);
+      strictEqual(obj.get('scaleX'), 1);
+      strictEqual(obj.get('scaleY'), 1);
+      strictEqual(obj.get('angle'), 0);
+      strictEqual(obj.get('flipX'), false);
+      strictEqual(obj.get('flipY'), false);
+      strictEqual(obj.get('opacity'), 1);
       ok(obj.get('path').length > 0);
+      start();
     });
   });
 
-  test('loadFromJSON with reviver function', function() {
-    ok(typeof canvas.loadFromJSON == 'function');
+  asyncTest('loadFromJSON with json object without default values', function() {
+    canvas.loadFromJSON(JSON.parse(PATH_WITHOUT_DEFAULTS_JSON), function(){
+      var obj = canvas.item(0);
 
+      ok(!canvas.isEmpty(), 'canvas is not empty');
+      equal(obj.type, 'path', 'first object is a path object');
+      equal(canvas.backgroundColor, '#ff5555', 'backgroundColor is populated properly');
+      equal(canvas.overlayColor, 'rgba(0,0,0,0.2)', 'overlayColor is populated properly');
+
+      equal(obj.get('originX'), 'left');
+      equal(obj.get('originY'), 'top');
+      equal(obj.get('left'), 268);
+      equal(obj.get('top'), 266);
+      equal(obj.get('width'), 49.803999999999995);
+      equal(obj.get('height'), 48.027);
+      equal(obj.get('fill'), 'rgb(0,0,0)');
+      strictEqual(obj.get('stroke'), null);
+      strictEqual(obj.get('strokeWidth'), 1);
+      strictEqual(obj.get('scaleX'), 1);
+      strictEqual(obj.get('scaleY'), 1);
+      strictEqual(obj.get('angle'), 0);
+      strictEqual(obj.get('flipX'), false);
+      strictEqual(obj.get('flipY'), false);
+      equal(obj.get('opacity'), 1);
+      ok(obj.get('path').length > 0);
+      start();
+    });
+  });
+
+  asyncTest('loadFromJSON with reviver function', function() {
     function reviver(obj, instance) {
       deepEqual(obj, JSON.parse(PATH_OBJ_JSON));
 
@@ -782,22 +840,25 @@
       equal(obj.get('width'), 49.803999999999995);
       equal(obj.get('height'), 48.027);
       equal(obj.get('fill'), 'rgb(0,0,0)');
-      equal(obj.get('stroke'), null);
-      equal(obj.get('strokeWidth'), 1);
-      equal(obj.get('scaleX'), 1);
-      equal(obj.get('scaleY'), 1);
-      equal(obj.get('angle'), 0);
-      equal(obj.get('flipX'), false);
-      equal(obj.get('flipY'), false);
-      equal(obj.get('opacity'), 1);
+      strictEqual(obj.get('stroke'), null);
+      strictEqual(obj.get('strokeWidth'), 1);
+      strictEqual(obj.get('scaleX'), 1);
+      strictEqual(obj.get('scaleY'), 1);
+      strictEqual(obj.get('angle'), 0);
+      strictEqual(obj.get('flipX'), false);
+      strictEqual(obj.get('flipY'), false);
+      strictEqual(obj.get('opacity'), 1);
       equal(obj.get('customID'), 'fabric_1');
       ok(obj.get('path').length > 0);
+      start();
     }, reviver);
   });
 
-  test('loadFromJSON with no objects', function() {
-    var c1 = new fabric.Canvas('c1', { backgroundColor: 'green', overlayColor: 'yellow' }),
-        c2 = new fabric.Canvas('c2', { backgroundColor: 'red', overlayColor: 'orange' });
+  asyncTest('loadFromJSON with no objects', function() {
+    var canvas1 = fabric.document.createElement('canvas'),
+        canvas2 = fabric.document.createElement('canvas'),
+        c1 = new fabric.Canvas(canvas1, { backgroundColor: 'green', overlayColor: 'yellow' }),
+        c2 = new fabric.Canvas(canvas2, { backgroundColor: 'red', overlayColor: 'orange' });
 
     var json = c1.toJSON();
     var fired = false;
@@ -807,13 +868,15 @@
       ok(fired, 'Callback should be fired even if no objects');
       equal(c2.backgroundColor, 'green', 'Color should be set properly');
       equal(c2.overlayColor, 'yellow', 'Color should be set properly');
-
+      start();
     });
   });
 
-  test('loadFromJSON without "objects" property', function() {
-    var c1 = new fabric.Canvas('c1', { backgroundColor: 'green', overlayColor: 'yellow' }),
-        c2 = new fabric.Canvas('c2', { backgroundColor: 'red', overlayColor: 'orange' });
+  asyncTest('loadFromJSON without "objects" property', function() {
+    var canvas1 = fabric.document.createElement('canvas'),
+        canvas2 = fabric.document.createElement('canvas'),
+        c1 = new fabric.Canvas(canvas1, { backgroundColor: 'green', overlayColor: 'yellow' }),
+        c2 = new fabric.Canvas(canvas2, { backgroundColor: 'red', overlayColor: 'orange' });
 
     var json = c1.toJSON();
     var fired = false;
@@ -826,13 +889,15 @@
       ok(fired, 'Callback should be fired even if no "objects" property exists');
       equal(c2.backgroundColor, 'green', 'Color should be set properly');
       equal(c2.overlayColor, 'yellow', 'Color should be set properly');
-
+      start();
     });
   });
 
-  test('loadFromJSON with empty fabric.Group', function() {
-    var c1 = new fabric.Canvas('c1'),
-        c2 = new fabric.Canvas('c2'),
+  asyncTest('loadFromJSON with empty fabric.Group', function() {
+    var canvas1 = fabric.document.createElement('canvas'),
+        canvas2 = fabric.document.createElement('canvas'),
+        c1 = new fabric.Canvas(canvas1),
+        c2 = new fabric.Canvas(canvas2),
         group = new fabric.Group();
 
     c1.add(group);
@@ -844,6 +909,7 @@
       fired = true;
 
       ok(fired, 'Callback should be fired even if empty fabric.Group exists');
+      start();
     });
   });
 
@@ -893,7 +959,7 @@
     });
   });
 
-  test('loadFromJSON with custom properties on Canvas with no async object', function() {
+  asyncTest('loadFromJSON with custom properties on Canvas with no async object', function() {
     var serialized = JSON.parse(PATH_JSON);
     serialized.controlsAboveOverlay = true;
     serialized.preserveObjectStacking = true;
@@ -903,10 +969,8 @@
       ok(!canvas.isEmpty(), 'canvas is not empty');
       equal(canvas.controlsAboveOverlay, true);
       equal(canvas.preserveObjectStacking, true);
+      start();
     });
-    // if no async object the callback is called syncronously
-    equal(canvas.controlsAboveOverlay, true);
-    equal(canvas.preserveObjectStacking, true);
   });
 
   asyncTest('loadFromJSON with custom properties on Canvas with image', function() {
@@ -1662,4 +1726,29 @@
     ok(typeof InheritedCanvasClass === 'function');
   });
 
+  test('mouse:down with different buttons', function() {
+    var clickCount = 0;
+    function mouseHandler() {
+      clickCount++;
+    }
+    canvas.on('mouse:down', mouseHandler);
+    canvas.fireMiddleClick = false;
+    canvas.fireRightClick = false;
+    canvas._currentTransform = false;
+    canvas.isDrawingMode = false;
+    canvas.__onMouseDown({ which: 1 });
+    equal(clickCount, 1, 'mouse down fired');
+    clickCount = 0;
+    canvas.__onMouseDown({ which: 3 });
+    equal(clickCount, 0, 'rightclick did not fire a mouse:down event');
+    canvas.fireRightClick = true;
+    canvas.__onMouseDown({ which: 3 });
+    equal(clickCount, 1, 'rightclick did fire a mouse:down event');
+    clickCount = 0;
+    canvas.__onMouseDown({ which: 2 });
+    equal(clickCount, 0, 'middleClick did not fire a mouse:down event');
+    canvas.fireMiddleClick = true;
+    canvas.__onMouseDown({ which: 2 });
+    equal(clickCount, 1, 'middleClick did fire a mouse:down event');
+  });
 })();

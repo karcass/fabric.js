@@ -113,6 +113,15 @@
     stateProperties: stateProperties,
 
     /**
+     * When `true`, object is cached on an additional canvas.
+     * default to false for images
+     * since 1.7.0
+     * @type Boolean
+     * @default
+     */
+    objectCaching: false,
+
+    /**
      * Constructor
      * @param {HTMLImageElement | String} element Image element
      * @param {Object} [options] Options object
@@ -259,23 +268,18 @@
       this.resizeFilters.forEach(function(filterObj) {
         filterObj && resizeFilters.push(filterObj.toObject());
       });
-
-      var object = extend(this.callSuper('toObject', propertiesToInclude), {
-        src: this.getSrc(),
-        filters: filters,
-        resizeFilters: resizeFilters,
-        crossOrigin: this.crossOrigin,
-        alignX: this.alignX,
-        alignY: this.alignY,
-        meetOrSlice: this.meetOrSlice
-      });
+      var object = extend(
+        this.callSuper(
+          'toObject',
+          ['crossOrigin', 'alignX', 'alignY', 'meetOrSlice'].concat(propertiesToInclude)
+        ), {
+          src: this.getSrc(),
+          filters: filters,
+          resizeFilters: resizeFilters,
+        });
 
       object.width /= scaleX;
       object.height /= scaleY;
-
-      if (!this.includeDefaultValues) {
-        this._removeDefaultValues(object);
-      }
 
       return object;
     },
@@ -288,7 +292,7 @@
      */
     toSVG: function(reviver) {
       var markup = this._createBaseSVGMarkup(), x = -this.width / 2, y = -this.height / 2,
-          preserveAspectRatio = 'none';
+          preserveAspectRatio = 'none', filtered = true;
       if (this.group && this.group.type === 'path-group') {
         x = this.left;
         y = this.top;
@@ -298,7 +302,7 @@
       }
       markup.push(
         '<g transform="', this.getSvgTransform(), this.getSvgTransformMatrix(), '">\n',
-          '<image ', this.getSvgId(), 'xlink:href="', this.getSvgSrc(),
+          '<image ', this.getSvgId(), 'xlink:href="', this.getSvgSrc(filtered),
             '" x="', x, '" y="', y,
             '" style="', this.getSvgStyles(),
             // we're essentially moving origin of transformation from top/left corner to the center of the shape
@@ -331,10 +335,11 @@
 
     /**
      * Returns source of an image
+     * @param {Boolean} filtered indicates if the src is needed for svg
      * @return {String} Source of an image
      */
-    getSrc: function() {
-      var element = this._originalElement;
+    getSrc: function(filtered) {
+      var element = filtered ? this._element : this._originalElement;
       if (element) {
         return fabric.isLikelyNode ? element._src : element.src;
       }
@@ -428,22 +433,13 @@
       /** @ignore */
       replacement.width = canvasEl.width;
       replacement.height = canvasEl.height;
-      if (fabric.isLikelyNode) {
-        replacement.src = canvasEl.toBuffer(undefined, fabric.Image.pngCompression);
-        // onload doesn't fire in some node versions, so we invoke callback manually
+      replacement.onload = function() {
         _this._element = replacement;
         !forResizing && (_this._filteredEl = replacement);
         callback && callback(_this);
-      }
-      else {
-        replacement.onload = function() {
-          _this._element = replacement;
-          !forResizing && (_this._filteredEl = replacement);
-          callback && callback(_this);
-          replacement.onload = canvasEl = null;
-        };
-        replacement.src = canvasEl.toDataURL('image/png');
-      }
+        replacement.onload = canvasEl = null;
+      };
+      replacement.src = canvasEl.toDataURL('image/png');
       return canvasEl;
     },
 
@@ -592,14 +588,6 @@
             ? this.getElement().height || 0
             : 0);
     },
-
-    /**
-     * Returns complexity of an instance
-     * @return {Number} complexity of this instance
-     */
-    complexity: function() {
-      return 1;
-    }
   });
 
   /**
@@ -623,7 +611,11 @@
    * @param {Function} callback Callback to invoke when an image instance is created
    */
   fabric.Image.fromObject = function(object, callback) {
-    fabric.util.loadImage(object.src, function(img) {
+    fabric.util.loadImage(object.src, function(img, error) {
+      if (error) {
+        callback && callback(null, error);
+        return;
+      }
       fabric.Image.prototype._initFilters.call(object, object.filters, function(filters) {
         object.filters = filters || [];
         fabric.Image.prototype._initFilters.call(object, object.resizeFilters, function(resizeFilters) {
@@ -654,7 +646,7 @@
    * @see {@link http://www.w3.org/TR/SVG/struct.html#ImageElement}
    */
   fabric.Image.ATTRIBUTE_NAMES =
-    fabric.SHARED_ATTRIBUTES.concat('x y width height preserveAspectRatio xlink:href'.split(' '));
+    fabric.SHARED_ATTRIBUTES.concat('x y width height preserveAspectRatio xlink:href crossOrigin'.split(' '));
 
   /**
    * Returns {@link fabric.Image} instance from an SVG element

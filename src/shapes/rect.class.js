@@ -11,7 +11,10 @@
   }
 
   var stateProperties = fabric.Object.prototype.stateProperties.concat();
-  stateProperties.push('rx', 'ry', 'x', 'y');
+  stateProperties.push('rx', 'ry');
+
+  var cacheProperties = fabric.Object.prototype.cacheProperties.concat();
+  cacheProperties.push('rx', 'ry');
 
   /**
    * Rectangle class
@@ -50,11 +53,7 @@
      */
     ry:   0,
 
-    /**
-     * Used to specify dash pattern for stroke on this object
-     * @type Array
-     */
-    strokeDashArray: null,
+    cacheProperties: cacheProperties,
 
     /**
      * Constructor
@@ -62,11 +61,8 @@
      * @return {Object} thisArg
      */
     initialize: function(options) {
-      options = options || { };
-
       this.callSuper('initialize', options);
       this._initRxRy();
-
     },
 
     /**
@@ -150,14 +146,7 @@
      * @return {Object} object representation of an instance
      */
     toObject: function(propertiesToInclude) {
-      var object = extend(this.callSuper('toObject', propertiesToInclude), {
-        rx: this.get('rx') || 0,
-        ry: this.get('ry') || 0
-      });
-      if (!this.includeDefaultValues) {
-        this._removeDefaultValues(object);
-      }
-      return object;
+      return this.callSuper('toObject', ['rx', 'ry'].concat(propertiesToInclude));
     },
 
     /* _TO_SVG_START_ */
@@ -185,14 +174,6 @@
       return reviver ? reviver(markup.join('')) : markup.join('');
     },
     /* _TO_SVG_END_ */
-
-    /**
-     * Returns complexity of an instance
-     * @return {Number} complexity
-     */
-    complexity: function() {
-      return 1;
-    }
   });
 
   /* _FROM_SVG_START_ */
@@ -234,12 +215,11 @@
    * @memberOf fabric.Rect
    * @param {Object} object Object to create an instance from
    * @param {Function} [callback] Callback to invoke when an fabric.Rect instance is created
+   * @param {Boolean} [forceAsync] Force an async behaviour trying to create pattern first
    * @return {Object} instance of fabric.Rect
    */
-  fabric.Rect.fromObject = function(object, callback) {
-    var rect = new fabric.Rect(object);
-    callback && callback(rect);
-    return rect;
+  fabric.Rect.fromObject = function(object, callback, forceAsync) {
+    return fabric.Object._fromObject('Rect', object, callback, forceAsync);
   };
 
 })(typeof exports !== 'undefined' ? exports : this);

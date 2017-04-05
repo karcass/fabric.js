@@ -2,8 +2,8 @@
 
   QUnit.module('fabric.Text');
 
-  function createTextObject() {
-    return new fabric.Text('x');
+  function createTextObject(text) {
+    return new fabric.Text(text || 'x');
   }
 
   var CHAR_WIDTH = 20;
@@ -141,6 +141,23 @@
     equal(text.get('fontFamily'), 'blah');
   });
 
+  test('get bounding rect after init', function() {
+    var string = 'Some long text, the quick brown fox jumps over the lazy dog etc... blah blah blah';
+    var text = new fabric.Text(string, {
+      left: 30,
+      top: 30,
+      fill: '#ffffff',
+      fontSize: 24,
+      fontWeight: 'normal',
+      fontFamily: 'Arial',
+      originY: 'bottom'
+    });
+    var br = text.getBoundingRect();
+    text.setCoords();
+    var br2 = text.getBoundingRect();
+    deepEqual(br, br2, 'text bounding box is the same before and after calling setCoords');
+  });
+
   test('setShadow', function(){
     var text = createTextObject();
     ok(typeof text.setShadow == 'function');
@@ -194,8 +211,8 @@
     // text.width = CHAR_WIDTH;
 
     var expectedObject = fabric.util.object.extend(fabric.util.object.clone(REFERENCE_TEXT_OBJECT), {
-      left: 4,
-      top: -5.14,
+      left: 4.5,
+      top: -5.75,
       width: 8,
       height: 18.08,
       fontSize: 16,
@@ -236,7 +253,7 @@
     var expectedObject = fabric.util.object.extend(fabric.util.object.clone(REFERENCE_TEXT_OBJECT), {
       /* left varies slightly due to node-canvas rendering */
       left:             fabric.util.toFixed(textWithAttrs.left + '', 2),
-      top:              -16.76,
+      top:              -18.54,
       width:            CHAR_WIDTH,
       height:           138.99,
       fill:             'rgb(255,255,255)',
@@ -268,6 +285,11 @@
 
     text.setText('xx');
     equal(text.width, CHAR_WIDTH * 2);
+  });
+
+  test('dimensions without text', function() {
+    var text = new fabric.Text('');
+    equal(text.width, 2);
   });
 
   test('setting fontFamily', function() {

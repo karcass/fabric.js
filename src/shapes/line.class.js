@@ -4,6 +4,7 @@
 
   var fabric = global.fabric || (global.fabric = { }),
       extend = fabric.util.object.extend,
+      clone = fabric.util.object.clone,
       coordProps = { x1: 1, x2: 1, y1: 1, y2: 1 },
       supportsLineDash = fabric.StaticCanvas.supports('setLineDash');
 
@@ -11,6 +12,14 @@
     fabric.warn('fabric.Line is already defined');
     return;
   }
+
+  var cacheProperties = fabric.Object.prototype.cacheProperties.concat();
+  cacheProperties.push(
+    'x1',
+    'x2',
+    'y1',
+    'y2'
+  );
 
   /**
    * Line class
@@ -55,6 +64,8 @@
      */
     y2: 0,
 
+    cacheProperties: cacheProperties,
+
     /**
      * Constructor
      * @param {Array} [points] Array of points
@@ -62,8 +73,6 @@
      * @return {fabric.Line} thisArg
      */
     initialize: function(points, options) {
-      options = options || { };
-
       if (!points) {
         points = [0, 0, 0, 0];
       }
@@ -158,10 +167,11 @@
         //  Line coords are distances from left-top of canvas to origin of line.
         //  To render line in a path-group, we need to translate them to
         //  distances from center of path-group to center of line.
-        var cp = this.getCenterPoint();
+        var cp = this.getCenterPoint(),
+            offset = this.strokeWidth / 2;
         ctx.translate(
-          cp.x - this.strokeWidth / 2,
-          cp.y - this.strokeWidth / 2
+          cp.x - (this.strokeLineCap === 'butt' && this.height === 0 ? 0 : offset),
+          cp.y - (this.strokeLineCap === 'butt' && this.width === 0 ? 0 : offset)
         );
       }
 
@@ -204,6 +214,23 @@
      */
     toObject: function(propertiesToInclude) {
       return extend(this.callSuper('toObject', propertiesToInclude), this.calcLinePoints());
+    },
+
+    /*
+     * Calculate object dimensions from its properties
+     * @private
+     */
+    _getNonTransformedDimensions: function() {
+      var dim = this.callSuper('_getNonTransformedDimensions');
+      if (this.strokeLineCap === 'butt') {
+        if (this.width === 0) {
+          dim.y -= this.strokeWidth;
+        }
+        if (this.height === 0) {
+          dim.x -= this.strokeWidth;
+        }
+      }
+      return dim;
     },
 
     /**
@@ -254,14 +281,6 @@
       return reviver ? reviver(markup.join('')) : markup.join('');
     },
     /* _TO_SVG_END_ */
-
-    /**
-     * Returns complexity of an instance
-     * @return {Number} complexity
-     */
-    complexity: function() {
-      return 1;
-    }
   });
 
   /* _FROM_SVG_START_ */
@@ -282,6 +301,7 @@
    * @return {fabric.Line} instance of fabric.Line
    */
   fabric.Line.fromElement = function(element, options) {
+    options = options || { };
     var parsedAttributes = fabric.parseAttributes(element, fabric.Line.ATTRIBUTE_NAMES),
         points = [
           parsedAttributes.x1 || 0,
@@ -289,6 +309,8 @@
           parsedAttributes.x2 || 0,
           parsedAttributes.y2 || 0
         ];
+    options.originX = 'left';
+    options.originY = 'top';
     return new fabric.Line(points, extend(parsedAttributes, options));
   };
   /* _FROM_SVG_END_ */
@@ -299,12 +321,20 @@
    * @memberOf fabric.Line
    * @param {Object} object Object to create an instance from
    * @param {function} [callback] invoked with new instance as first argument
+   * @param {Boolean} [forceAsync] Force an async behaviour trying to create pattern first
    * @return {fabric.Line} instance of fabric.Line
    */
-  fabric.Line.fromObject = function(object, callback) {
-    var points = [object.x1, object.y1, object.x2, object.y2],
-        line = new fabric.Line(points, object);
-    callback && callback(line);
+  fabric.Line.fromObject = function(object, callback, forceAsync) {
+    function _callback(instance) {
+      delete instance.points;
+      callback && callback(instance);
+    };
+    var options = clone(object, true);
+    options.points = [object.x1, object.y1, object.x2, object.y2];
+    var line = fabric.Object._fromObject('Line', options, _callback, forceAsync, 'points');
+    if (line) {
+      delete line.points;
+    }
     return line;
   };
 

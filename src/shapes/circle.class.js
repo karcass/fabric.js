@@ -11,6 +11,11 @@
     return;
   }
 
+  var cacheProperties = fabric.Object.prototype.cacheProperties.concat();
+  cacheProperties.push(
+    'radius'
+  );
+
   /**
    * Circle class
    * @class fabric.Circle
@@ -47,19 +52,16 @@
      */
     endAngle: pi * 2,
 
+    cacheProperties: cacheProperties,
+
     /**
      * Constructor
      * @param {Object} [options] Options object
      * @return {fabric.Circle} thisArg
      */
     initialize: function(options) {
-      options = options || { };
-
       this.callSuper('initialize', options);
-      this.set('radius', options.radius || 0);
-
-      this.startAngle = options.startAngle || this.startAngle;
-      this.endAngle = options.endAngle || this.endAngle;
+      this.set('radius', options && options.radius || 0);
     },
 
     /**
@@ -84,11 +86,7 @@
      * @return {Object} object representation of an instance
      */
     toObject: function(propertiesToInclude) {
-      return extend(this.callSuper('toObject', propertiesToInclude), {
-        radius: this.get('radius'),
-        startAngle: this.startAngle,
-        endAngle: this.endAngle
-      });
+      return this.callSuper('toObject', ['radius', 'startAngle', 'endAngle'].concat(propertiesToInclude));
     },
 
     /* _TO_SVG_START_ */
@@ -178,14 +176,6 @@
       this.radius = value;
       return this.set('width', value * 2).set('height', value * 2);
     },
-
-    /**
-     * Returns complexity of an instance
-     * @return {Number} complexity of this instance
-     */
-    complexity: function() {
-      return 1;
-    }
   });
 
   /* _FROM_SVG_START_ */
@@ -239,12 +229,11 @@
    * @memberOf fabric.Circle
    * @param {Object} object Object to create an instance from
    * @param {function} [callback] invoked with new instance as first argument
+   * @param {Boolean} [forceAsync] Force an async behaviour trying to create pattern first
    * @return {Object} Instance of fabric.Circle
    */
-  fabric.Circle.fromObject = function(object, callback) {
-    var circle = new fabric.Circle(object);
-    callback && callback(circle);
-    return circle;
+  fabric.Circle.fromObject = function(object, callback, forceAsync) {
+    return fabric.Object._fromObject('Circle', object, callback, forceAsync);
   };
 
 })(typeof exports !== 'undefined' ? exports : this);

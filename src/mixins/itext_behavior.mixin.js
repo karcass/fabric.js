@@ -12,19 +12,12 @@
       this.initRemovedHandler();
       this.initCursorSelectionHandlers();
       this.initDoubleClickSimulation();
+      this.mouseMoveHandler = this.mouseMoveHandler.bind(this);
     },
 
-    /**
-     * Initializes "selected" event handler
-     */
-    initSelectedHandler: function() {
-      this.on('selected', function() {
-
-        var _this = this;
-        setTimeout(function() {
-          _this.selected = true;
-        }, 100);
-      });
+    onDeselect: function() {
+      this.isEditing && this.exitEditing();
+      this.selected = false;
     },
 
     /**
@@ -33,18 +26,14 @@
     initAddedHandler: function() {
       var _this = this;
       this.on('added', function() {
-        if (this.canvas && !this.canvas._hasITextHandlers) {
-          this.canvas._hasITextHandlers = true;
-          this._initCanvasHandlers();
-        }
-
-        // Track IText instances per-canvas. Only register in this array once added
-        // to a canvas; we don't want to leak a reference to the instance forever
-        // simply because it existed at some point.
-        // (Might be added to a collection, but not on a canvas.)
-        if (_this.canvas) {
-          _this.canvas._iTextInstances = _this.canvas._iTextInstances || [];
-          _this.canvas._iTextInstances.push(_this);
+        var canvas = _this.canvas;
+        if (canvas) {
+          if (!canvas._hasITextHandlers) {
+            canvas._hasITextHandlers = true;
+            _this._initCanvasHandlers(canvas);
+          }
+          canvas._iTextInstances = canvas._iTextInstances || [];
+          canvas._iTextInstances.push(_this);
         }
       });
     },
@@ -52,35 +41,39 @@
     initRemovedHandler: function() {
       var _this = this;
       this.on('removed', function() {
-        // (Might be removed from a collection, but not on a canvas.)
-        if (_this.canvas) {
-          _this.canvas._iTextInstances = _this.canvas._iTextInstances || [];
-          fabric.util.removeFromArray(_this.canvas._iTextInstances, _this);
+        var canvas = _this.canvas;
+        if (canvas) {
+          canvas._iTextInstances = canvas._iTextInstances || [];
+          fabric.util.removeFromArray(canvas._iTextInstances, _this);
+          if (canvas._iTextInstances.length === 0) {
+            canvas._hasITextHandlers = false;
+            _this._removeCanvasHandlers(canvas);
+          }
         }
       });
     },
 
     /**
+     * register canvas event to manage exiting on other instances
      * @private
      */
-    _initCanvasHandlers: function() {
-      var _this = this;
-
-      this.canvas.on('selection:cleared', function() {
-        fabric.IText.prototype.exitEditingOnOthers(_this.canvas);
-      });
-
-      this.canvas.on('mouse:up', function() {
-        if (_this.canvas._iTextInstances) {
-          _this.canvas._iTextInstances.forEach(function(obj) {
+    _initCanvasHandlers: function(canvas) {
+      canvas._mouseUpITextHandler = (function() {
+        if (canvas._iTextInstances) {
+          canvas._iTextInstances.forEach(function(obj) {
             obj.__isMousedown = false;
           });
         }
-      });
+      }).bind(this);
+      canvas.on('mouse:up', canvas._mouseUpITextHandler);
+    },
 
-      this.canvas.on('object:selected', function() {
-        fabric.IText.prototype.exitEditingOnOthers(_this.canvas);
-      });
+    /**
+     * remove canvas event to manage exiting on other instances
+     * @private
+     */
+    _removeCanvasHandlers: function(canvas) {
+      canvas.off('mouse:up', canvas._mouseUpITextHandler);
     },
 
     /**
@@ -362,13 +355,13 @@
 
       this._tick();
       this.fire('editing:entered');
-
+      this._fireSelectionChanged();
       if (!this.canvas) {
         return this;
       }
       this.canvas.fire('text:editing:entered', { target: this });
-      this.canvas.renderAll();
       this.initMouseMoveHandler();
+      this.canvas.renderAll();
       return this;
     },
 
@@ -387,7 +380,7 @@
      * Initializes "mousemove" event handler
      */
     initMouseMoveHandler: function() {
-      this.canvas.on('mouse:move', this.mouseMoveHandler.bind(this));
+      this.canvas.on('mouse:move', this.mouseMoveHandler);
     },
 
     /**
@@ -401,7 +394,11 @@
       var newSelectionStart = this.getSelectionStartFromPointer(options.e),
           currentStart = this.selectionStart,
           currentEnd = this.selectionEnd;
-      if (newSelectionStart === this.__selectionStartOnMouseDown) {
+      if (
+        (newSelectionStart !== this.__selectionStartOnMouseDown || currentStart === currentEnd)
+        &&
+        (currentStart === newSelectionStart || currentEnd === newSelectionStart)
+      ) {
         return;
       }
       if (newSelectionStart > this.__selectionStartOnMouseDown) {
@@ -413,6 +410,7 @@
         this.selectionEnd = this.__selectionStartOnMouseDown;
       }
       if (this.selectionStart !== currentStart || this.selectionEnd !== currentEnd) {
+        this.restartCursorIfNeeded();
         this._fireSelectionChanged();
         this._updateTextarea();
         this.renderCursorOrSelection();
@@ -468,9 +466,7 @@
           lineIndex = cursorLocation.lineIndex,
           charIndex = cursorLocation.charIndex,
           charHeight = this.getCurrentCharFontSize(lineIndex, charIndex),
-          leftOffset = (lineIndex === 0 && charIndex === 0)
-                    ? this._getLineLeftOffset(this._getLineWidth(this.ctx, lineIndex))
-                    : boundaries.leftOffset,
+          leftOffset = boundaries.leftOffset,
           m = this.calcTransformMatrix(),
           p = {
             x: boundaries.left + leftOffset,
@@ -550,8 +546,12 @@
       this.selectable = true;
 
       this.selectionEnd = this.selectionStart;
-      this.hiddenTextarea && this.canvas && this.hiddenTextarea.parentNode.removeChild(this.hiddenTextarea);
-      this.hiddenTextarea = null;
+
+      if (this.hiddenTextarea) {
+        this.hiddenTextarea.blur && this.hiddenTextarea.blur();
+        this.canvas && this.hiddenTextarea.parentNode.removeChild(this.hiddenTextarea);
+        this.hiddenTextarea = null;
+      }
 
       this.abortCursorAnimation();
       this._restoreEditingProps();
@@ -564,7 +564,6 @@
         this.canvas.fire('text:editing:exited', { target: this });
         isTextChanged && this.canvas.fire('object:modified', { target: this });
       }
-
       return this;
     },
 
@@ -619,7 +618,7 @@
       }
       for (var i = 0, len = _chars.length; i < len; i++) {
         if (useCopiedStyle) {
-          style = fabric.copiedTextStyle[i];
+          style = fabric.util.object.clone(fabric.copiedTextStyle[i], true);
         }
         this.insertChar(_chars[i], i < len - 1, style);
       }
@@ -646,8 +645,19 @@
       this.setCoords();
       this._fireSelectionChanged();
       this.fire('changed');
-      this.canvas && this.canvas.fire('text:changed', { target: this });
-      this.canvas && this.canvas.renderAll();
+      this.restartCursorIfNeeded();
+      if (this.canvas) {
+        this.canvas.fire('text:changed', { target: this });
+        this.canvas.renderAll();
+      }
+    },
+
+    restartCursorIfNeeded: function() {
+      if (!this._currentTickState || this._currentTickState.isAborted
+        || !this._currentTickCompleteState || this._currentTickCompleteState.isAborted
+      ) {
+        this.initDelayedCursor();
+      }
     },
 
     /**
@@ -660,10 +670,6 @@
 
       this.shiftLineStyles(lineIndex, +1);
 
-      if (!this.styles[lineIndex + 1]) {
-        this.styles[lineIndex + 1] = {};
-      }
-
       var currentCharStyle = {},
           newLineStyles    = {};
 
@@ -673,21 +679,24 @@
 
       // if there's nothing after cursor,
       // we clone current char style onto the next (otherwise empty) line
-      if (isEndOfLine) {
+      if (isEndOfLine && currentCharStyle) {
         newLineStyles[0] = clone(currentCharStyle);
         this.styles[lineIndex + 1] = newLineStyles;
       }
       // otherwise we clone styles of all chars
       // after cursor onto the next line, from the beginning
       else {
+        var somethingAdded = false;
         for (var index in this.styles[lineIndex]) {
-          if (parseInt(index, 10) >= charIndex) {
-            newLineStyles[parseInt(index, 10) - charIndex] = this.styles[lineIndex][index];
+          var numIndex = parseInt(index, 10);
+          if (numIndex >= charIndex) {
+            somethingAdded = true;
+            newLineStyles[numIndex - charIndex] = this.styles[lineIndex][index];
             // remove lines from the previous line since they're on a new line now
             delete this.styles[lineIndex][index];
           }
         }
-        this.styles[lineIndex + 1] = newLineStyles;
+        somethingAdded && (this.styles[lineIndex + 1] = newLineStyles);
       }
       this._forceClearCache = true;
     },
@@ -721,9 +730,8 @@
           }
         }
       }
-
-      this.styles[lineIndex][charIndex] =
-        style || clone(currentLineStyles[charIndex - 1]);
+      var newStyle = style || currentLineStyles[charIndex - 1];
+      newStyle && (this.styles[lineIndex][charIndex] = newStyle);
       this._forceClearCache = true;
     },
 

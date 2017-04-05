@@ -12,6 +12,8 @@
       getElementOffset = fabric.util.getElementOffset,
       removeFromArray = fabric.util.removeFromArray,
       toFixed = fabric.util.toFixed,
+      transformPoint = fabric.util.transformPoint,
+      invertTransform = fabric.util.invertTransform,
 
       CANVAS_INIT_ERROR = new Error('Could not initialize `canvas` element');
 
@@ -28,7 +30,7 @@
    * @fires object:added
    * @fires object:removed
    */
-  fabric.StaticCanvas = fabric.util.createClass(/** @lends fabric.StaticCanvas.prototype */ {
+  fabric.StaticCanvas = fabric.util.createClass(fabric.CommonMethods, /** @lends fabric.StaticCanvas.prototype */ {
 
     /**
      * Constructor
@@ -93,7 +95,7 @@
      * @type Boolean
      * @default
      */
-    stateful: true,
+    stateful: false,
 
     /**
      * Indicates whether {@link fabric.Collection.add}, {@link fabric.Collection.insertAt} and {@link fabric.Collection.remove} should also re-render canvas.
@@ -138,7 +140,7 @@
      * @type Array
      * @default
      */
-    viewportTransform: [1, 0, 0, 1, 0, 0],
+    viewportTransform: fabric.iMatrix.concat(),
 
     /**
      * if set to false background image is not affected by viewport transform
@@ -169,6 +171,27 @@
     enableRetinaScaling: true,
 
     /**
+     * Describe canvas element extension over design
+     * properties are tl,tr,bl,br.
+     * if canvas is not zoomed/panned those points are the four corner of canvas
+     * if canvas is viewportTransformed you those points indicate the extension
+     * of canvas element in plain untrasformed coordinates
+     * The coordinates get updated with @method calcViewportBoundaries.
+     * @memberOf fabric.StaticCanvas.prototype
+     */
+    vptCoords: { },
+
+    /**
+     * Based on vptCoords and object.aCoords, skip rendering of objects that
+     * are not included in current viewport.
+     * May greatly help in applications with crowded canvas and use of zoom/pan
+     * If One of the corner of the bounding box of the object is on the canvas
+     * the objects get rendered.
+     * @memberOf fabric.StaticCanvas.prototype
+     */
+    skipOffscreen: true,
+
+    /**
      * @private
      * @param {HTMLElement | String} el &lt;canvas> element to initialize instance on
      * @param {Object} [options] Options object
@@ -179,7 +202,6 @@
       this._createLowerCanvas(el);
       this._initOptions(options);
       this._setImageSmoothing();
-
       // only initialize retina scaling once
       if (!this.interactive) {
         this._initRetinaScaling();
@@ -222,7 +244,6 @@
       if (!this._isRetinaScaling()) {
         return;
       }
-
       this.lowerCanvasEl.setAttribute('width', this.width * fabric.devicePixelRatio);
       this.lowerCanvasEl.setAttribute('height', this.height * fabric.devicePixelRatio);
 
@@ -436,51 +457,27 @@
      * @param {Function} [callback] Callback is invoked when color is set
      */
     __setBgOverlayColor: function(property, color, callback) {
-      if (color && color.source) {
-        var _this = this;
-        fabric.util.loadImage(color.source, function(img) {
-          _this[property] = new fabric.Pattern({
-            source: img,
-            repeat: color.repeat,
-            offsetX: color.offsetX,
-            offsetY: color.offsetY
-          });
-          callback && callback();
-        });
-      }
-      else {
-        this[property] = color;
-        callback && callback();
-      }
-
+      this[property] = color;
+      this._initGradient(color, property);
+      this._initPattern(color, property, callback);
       return this;
     },
 
     /**
      * @private
      */
-    _createCanvasElement: function() {
-      var element = fabric.document.createElement('canvas');
+    _createCanvasElement: function(canvasEl) {
+      var element = fabric.util.createCanvasElement(canvasEl);
       if (!element.style) {
         element.style = { };
       }
       if (!element) {
         throw CANVAS_INIT_ERROR;
       }
-      this._initCanvasElement(element);
-      return element;
-    },
-
-    /**
-     * @private
-     * @param {HTMLElement} element
-     */
-    _initCanvasElement: function(element) {
-      fabric.util.createCanvasElement(element);
-
       if (typeof element.getContext === 'undefined') {
         throw CANVAS_INIT_ERROR;
       }
+      return element;
     },
 
     /**
@@ -488,9 +485,7 @@
      * @param {Object} [options] Options object
      */
     _initOptions: function (options) {
-      for (var prop in options) {
-        this[prop] = options[prop];
-      }
+      this._setOptions(options);
 
       this.width = this.width || parseInt(this.lowerCanvasEl.width, 10) || 0;
       this.height = this.height || parseInt(this.lowerCanvasEl.height, 10) || 0;
@@ -514,8 +509,7 @@
      * @param {HTMLElement} [canvasEl]
      */
     _createLowerCanvas: function (canvasEl) {
-      this.lowerCanvasEl = fabric.util.getById(canvasEl) || this._createCanvasElement();
-      this._initCanvasElement(this.lowerCanvasEl);
+      this.lowerCanvasEl = fabric.util.getById(canvasEl) || this._createCanvasElement(canvasEl);
 
       fabric.util.addClass(this.lowerCanvasEl, 'lower-canvas');
 
@@ -658,7 +652,7 @@
      * @return {Number}
      */
     getZoom: function () {
-      return Math.sqrt(this.viewportTransform[0] * this.viewportTransform[3]);
+      return this.viewportTransform[0];
     },
 
     /**
@@ -668,14 +662,16 @@
      * @chainable true
      */
     setViewportTransform: function (vpt) {
-      var activeGroup = this.getActiveGroup();
+      var activeGroup = this._activeGroup, object, ingoreVpt = false, skipAbsolute = true;
       this.viewportTransform = vpt;
       for (var i = 0, len = this._objects.length; i < len; i++) {
-        this._objects[i].setCoords();
+        object = this._objects[i];
+        object.group || object.setCoords(ingoreVpt, skipAbsolute);
       }
       if (activeGroup) {
-        activeGroup.setCoords();
+        activeGroup.setCoords(ingoreVpt, skipAbsolute);
       }
+      this.calcViewportBoundaries();
       this.renderAll();
       return this;
     },
@@ -690,10 +686,10 @@
     zoomToPoint: function (point, value) {
       // TODO: just change the scale, preserve other transformations
       var before = point, vpt = this.viewportTransform.slice(0);
-      point = fabric.util.transformPoint(point, fabric.util.invertTransform(this.viewportTransform));
+      point = transformPoint(point, invertTransform(this.viewportTransform));
       vpt[0] = value;
       vpt[3] = value;
-      var after = fabric.util.transformPoint(point, vpt);
+      var after = transformPoint(point, vpt);
       vpt[4] += before.x - after.x;
       vpt[5] += before.y - after.y;
       return this.setViewportTransform(vpt);
@@ -745,22 +741,6 @@
     },
 
     /**
-     * Returns currently selected object, if any
-     * @return {fabric.Object}
-     */
-    getActiveObject: function() {
-      return null;
-    },
-
-    /**
-     * Returns currently selected group of object, if any
-     * @return {fabric.Group}
-     */
-    getActiveGroup: function() {
-      return null;
-    },
-
-    /**
      * @private
      * @param {fabric.Object} obj Object that was added
      */
@@ -779,6 +759,7 @@
     _onObjectRemoved: function(obj) {
       this.fire('object:removed', { target: obj });
       obj.fire('removed');
+      delete obj.canvas;
     },
 
     /**
@@ -810,7 +791,12 @@
       this.backgroundImage = null;
       this.overlayImage = null;
       this.backgroundColor = '';
-      this.overlayColor = ''
+      this.overlayColor = '';
+      if (this._hasITextHandlers) {
+        this.off('mouse:up', this._mouseUpITextHandler);
+        this._iTextInstances = null;
+        this._hasITextHandlers = false;
+      }
       this.clearContext(this.contextContainer);
       this.fire('canvas:cleared');
       this.renderAll();
@@ -818,7 +804,7 @@
     },
 
     /**
-     * Renders both the canvas.
+     * Renders the canvas
      * @return {fabric.Canvas} instance
      * @chainable
      */
@@ -829,6 +815,24 @@
     },
 
     /**
+     * Calculate the position of the 4 corner of canvas with current viewportTransform.
+     * helps to determinate when an object is in the current rendering viewport using
+     * object absolute coordinates ( aCoords )
+     * @return {Object} points.tl
+     * @chainable
+     */
+    calcViewportBoundaries: function() {
+      var points = { }, width = this.getWidth(), height = this.getHeight(),
+          iVpt = invertTransform(this.viewportTransform);
+      points.tl = transformPoint({ x: 0, y: 0 }, iVpt);
+      points.br = transformPoint({ x: width, y: height }, iVpt);
+      points.tr = new fabric.Point(points.br.x, points.tl.y);
+      points.bl = new fabric.Point(points.tl.x, points.br.y);
+      this.vptCoords = points;
+      return points;
+    },
+
+    /**
      * Renders background, objects, overlay and controls.
      * @param {CanvasRenderingContext2D} ctx
      * @param {Array} objects to render
@@ -836,6 +840,7 @@
      * @chainable
      */
     renderCanvas: function(ctx, objects) {
+      this.calcViewportBoundaries();
       this.clearContext(ctx);
       this.fire('before:render');
       if (this.clipTo) {
@@ -862,14 +867,6 @@
     },
 
     /**
-     * dummy function for organization purpouse.
-     * @private
-     */
-    drawControls: function() {
-      // NOOP
-    },
-
-    /**
      * @private
      * @param {CanvasRenderingContext2D} ctx Context to render on
      * @param {Array} objects to render
@@ -889,7 +886,7 @@
       var object = this[property + 'Color'];
       if (object) {
         ctx.fillStyle = object.toLive
-          ? object.toLive(ctx)
+          ? object.toLive(ctx, this)
           : object;
 
         ctx.fillRect(
@@ -1017,8 +1014,8 @@
      */
     getVpCenter: function() {
       var center = this.getCenter(),
-          iVpt = fabric.util.invertTransform(this.viewportTransform);
-      return fabric.util.transformPoint({ x: center.left, y: center.top }, iVpt);
+          iVpt = invertTransform(this.viewportTransform);
+      return transformPoint({ x: center.left, y: center.top }, iVpt);
     },
 
     /**
@@ -1070,7 +1067,7 @@
         objects: this._toObjects(methodName, propertiesToInclude)
       };
 
-      extend(data, this.__serializeBgOverlay(propertiesToInclude));
+      extend(data, this.__serializeBgOverlay(methodName, propertiesToInclude));
 
       fabric.util.populateWithProperties(this, data, propertiesToInclude);
 
@@ -1099,65 +1096,24 @@
         instance.includeDefaultValues = false;
       }
 
-      //If the object is part of the current selection group, it should
-      //be transformed appropriately
-      //i.e. it should be serialised as it would appear if the selection group
-      //were to be destroyed.
-      var originalProperties = this._realizeGroupTransformOnObject(instance),
-          object = instance[methodName](propertiesToInclude);
+      var object = instance[methodName](propertiesToInclude);
       if (!this.includeDefaultValues) {
         instance.includeDefaultValues = originalValue;
       }
-
-      //Undo the damage we did by changing all of its properties
-      this._unwindGroupTransformOnObject(instance, originalProperties);
-
       return object;
     },
 
     /**
-     * Realises an object's group transformation on it
      * @private
-     * @param {fabric.Object} [instance] the object to transform (gets mutated)
-     * @returns the original values of instance which were changed
      */
-    _realizeGroupTransformOnObject: function(instance) {
-      var layoutProps = ['angle', 'flipX', 'flipY', 'height', 'left', 'scaleX', 'scaleY', 'top', 'width'];
-      if (instance.group && instance.group === this.getActiveGroup()) {
-        //Copy all the positionally relevant properties across now
-        var originalValues = {};
-        layoutProps.forEach(function(prop) {
-          originalValues[prop] = instance[prop];
-        });
-        this.getActiveGroup().realizeTransform(instance);
-        return originalValues;
-      }
-      else {
-        return null;
-      }
-    },
+    __serializeBgOverlay: function(methodName, propertiesToInclude) {
+      var data = { };
 
-    /**
-     * Restores the changed properties of instance
-     * @private
-     * @param {fabric.Object} [instance] the object to un-transform (gets mutated)
-     * @param {Object} [originalValues] the original values of instance, as returned by _realizeGroupTransformOnObject
-     */
-    _unwindGroupTransformOnObject: function(instance, originalValues) {
-      if (originalValues) {
-        instance.set(originalValues);
-      }
-    },
-
-    /**
-     * @private
-     */
-    __serializeBgOverlay: function(propertiesToInclude) {
-      var data = {
-        background: (this.backgroundColor && this.backgroundColor.toObject)
+      if (this.backgroundColor) {
+        data.background = this.backgroundColor.toObject
           ? this.backgroundColor.toObject(propertiesToInclude)
-          : this.backgroundColor
-      };
+          : this.backgroundColor;
+      }
 
       if (this.overlayColor) {
         data.overlay = this.overlayColor.toObject
@@ -1165,10 +1121,10 @@
           : this.overlayColor;
       }
       if (this.backgroundImage) {
-        data.backgroundImage = this.backgroundImage.toObject(propertiesToInclude);
+        data.backgroundImage = this._toObject(this.backgroundImage, methodName, propertiesToInclude);
       }
       if (this.overlayImage) {
-        data.overlayImage = this.overlayImage.toObject(propertiesToInclude);
+        data.overlayImage = this._toObject(this.overlayImage, methodName, propertiesToInclude);
       }
 
       return data;
@@ -1289,35 +1245,108 @@
           'version="1.1" ',
           'width="', width, '" ',
           'height="', height, '" ',
-          (this.backgroundColor && !this.backgroundColor.toLive
-            ? 'style="background-color: ' + this.backgroundColor + '" '
-            : null),
           viewBox,
           'xml:space="preserve">\n',
         '<desc>Created with Fabric.js ', fabric.version, '</desc>\n',
-        '<defs>',
-          fabric.createSVGFontFacesMarkup(this.getObjects()),
-          fabric.createSVGRefElementsMarkup(this),
+        '<defs>\n',
+          this.createSVGFontFacesMarkup(),
+          this.createSVGRefElementsMarkup(),
         '</defs>\n'
       );
+    },
+
+    /**
+     * Creates markup containing SVG referenced elements like patterns, gradients etc.
+     * @return {String}
+     */
+    createSVGRefElementsMarkup: function() {
+      var _this = this,
+          markup = ['backgroundColor', 'overlayColor'].map(function(prop) {
+            var fill = _this[prop];
+            if (fill && fill.toLive) {
+              return fill.toSVG(_this, false);
+            }
+          });
+      return markup.join('');
+    },
+
+    /**
+     * Creates markup containing SVG font faces,
+     * font URLs for font faces must be collected by developers
+     * and are not extracted from the DOM by fabricjs
+     * @param {Array} objects Array of fabric objects
+     * @return {String}
+     */
+    createSVGFontFacesMarkup: function() {
+      var markup = '', fontList = { }, obj, fontFamily,
+          style, row, rowIndex, _char, charIndex,
+          fontPaths = fabric.fontPaths, objects = this.getObjects();
+
+      for (var i = 0, len = objects.length; i < len; i++) {
+        obj = objects[i];
+        fontFamily = obj.fontFamily;
+        if (obj.type.indexOf('text') === -1 || fontList[fontFamily] || !fontPaths[fontFamily]) {
+          continue;
+        }
+        fontList[fontFamily] = true;
+        if (!obj.styles) {
+          continue;
+        }
+        style = obj.styles;
+        for (rowIndex in style) {
+          row = style[rowIndex];
+          for (charIndex in row) {
+            _char = row[charIndex];
+            fontFamily = _char.fontFamily;
+            if (!fontList[fontFamily] && fontPaths[fontFamily]) {
+              fontList[fontFamily] = true;
+            }
+          }
+        }
+      }
+
+      for (var j in fontList) {
+        markup += [
+          '\t\t@font-face {\n',
+          '\t\t\tfont-family: \'', j, '\';\n',
+          '\t\t\tsrc: url(\'', fontPaths[j], '\');\n',
+          '\t\t}\n'
+        ].join('');
+      }
+
+      if (markup) {
+        markup = [
+          '\t<style type="text/css">',
+          '<![CDATA[\n',
+          markup,
+          ']]>',
+          '</style>\n'
+        ].join('');
+      }
+
+      return markup;
     },
 
     /**
      * @private
      */
     _setSVGObjects: function(markup, reviver) {
-      var instance, originalProperties;
+      var instance;
       for (var i = 0, objects = this.getObjects(), len = objects.length; i < len; i++) {
         instance = objects[i];
         if (instance.excludeFromExport) {
           continue;
         }
-        //If the object is in a selection group, simulate what would happen to that
-        //object when the group is deselected
-        originalProperties = this._realizeGroupTransformOnObject(instance);
-        markup.push(instance.toSVG(reviver));
-        this._unwindGroupTransformOnObject(instance, originalProperties);
+        this._setSVGObject(markup, instance, reviver);
       }
+    },
+
+    /**
+     * push single object svg representation in the markup
+     * @private
+     */
+    _setSVGObject: function(markup, instance, reviver) {
+      markup.push(instance.toSVG(reviver));
     },
 
     /**
@@ -1333,22 +1362,28 @@
      * @private
      */
     _setSVGBgOverlayColor: function(markup, property) {
-      if (this[property] && this[property].source) {
+      var filler = this[property];
+      if (!filler) {
+        return;
+      }
+      if (filler.toLive) {
+        var repeat = filler.repeat;
         markup.push(
-          '<rect x="', this[property].offsetX, '" y="', this[property].offsetY, '" ',
+          '<rect transform="translate(', this.width / 2, ',', this.height / 2, ')"',
+            ' x="', filler.offsetX - this.width / 2, '" y="', filler.offsetY - this.height / 2, '" ',
             'width="',
-              (this[property].repeat === 'repeat-y' || this[property].repeat === 'no-repeat'
-                ? this[property].source.width
+              (repeat === 'repeat-y' || repeat === 'no-repeat'
+                ? filler.source.width
                 : this.width),
             '" height="',
-              (this[property].repeat === 'repeat-x' || this[property].repeat === 'no-repeat'
-                ? this[property].source.height
+              (repeat === 'repeat-x' || repeat === 'no-repeat'
+                ? filler.source.height
                 : this.height),
-            '" fill="url(#' + property + 'Pattern)"',
+            '" fill="url(#SVGID_' + filler.id + ')"',
           '></rect>\n'
         );
       }
-      else if (this[property] && property === 'overlayColor') {
+      else {
         markup.push(
           '<rect x="0" y="0" ',
             'width="', this.width,
@@ -1371,7 +1406,7 @@
       if (!object) {
         return this;
       }
-      var activeGroup = this.getActiveGroup ? this.getActiveGroup() : null,
+      var activeGroup = this._activeGroup,
           i, obj, objs;
       if (object === activeGroup) {
         objs = activeGroup._objects;
@@ -1399,7 +1434,7 @@
       if (!object) {
         return this;
       }
-      var activeGroup = this.getActiveGroup ? this.getActiveGroup() : null,
+      var activeGroup = this._activeGroup,
           i, obj, objs;
       if (object === activeGroup) {
         objs = activeGroup._objects;
@@ -1427,7 +1462,7 @@
       if (!object) {
         return this;
       }
-      var activeGroup = this.getActiveGroup ? this.getActiveGroup() : null,
+      var activeGroup = this._activeGroup,
           i, obj, idx, newIdx, objs;
 
       if (object === activeGroup) {
@@ -1495,7 +1530,7 @@
       if (!object) {
         return this;
       }
-      var activeGroup = this.getActiveGroup ? this.getActiveGroup() : null,
+      var activeGroup = this._activeGroup,
           i, obj, idx, newIdx, objs;
 
       if (object === activeGroup) {

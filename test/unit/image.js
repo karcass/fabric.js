@@ -2,7 +2,7 @@
 
   function getAbsolutePath(path) {
     var isAbsolute = /^https?:/.test(path);
-    if (isAbsolute) { return path };
+    if (isAbsolute) { return path; };
     var imgEl = _createImageElement();
     imgEl.src = path;
     var src = imgEl.src;
@@ -54,7 +54,7 @@
   };
 
   function _createImageElement() {
-    return fabric.isLikelyNode ? new (require('canvas').Image)() : fabric.document.createElement('img');
+    return fabric.isLikelyNode ? new (require(fabric.canvasModule).Image)() : fabric.document.createElement('img');
   }
 
   function _createImageObject(width, height, callback, options) {
@@ -62,7 +62,7 @@
     setSrc(elImage, IMG_SRC, function() {
       if (width != elImage.width || height != elImage.height) {
         if (fabric.isLikelyNode) {
-          var Canvas = require('canvas');
+          var Canvas = require(fabric.canvasModule);
           var canvas = new Canvas(width, height);
           canvas.getContext('2d').drawImage(elImage, 0, 0, width, height);
           elImage._src = canvas.toDataURL();
@@ -91,7 +91,7 @@
   function setSrc(img, src, callback) {
     if (fabric.isLikelyNode) {
       require('fs').readFile(src, function(err, imgData) {
-        if (err) { throw err };
+        if (err) { throw err; };
         img.src = imgData;
         img._src = src;
         callback && callback();
@@ -158,7 +158,6 @@
       var filter = new fabric.Image.filters.Resize({resizeType: 'bilinear', scaleX: 0.3, scaleY: 0.3});
       image.resizeFilters.push(filter);
       ok(image.resizeFilters[0] instanceof fabric.Image.filters.Resize, 'should inherit from fabric.Image.filters.Resize');
-
       var toObject = image.toObject();
       deepEqual(toObject.resizeFilters[0], filter.toObject());
       fabric.Image.fromObject(toObject, function(imageFromObject) {

@@ -29,6 +29,9 @@
     return;
   }
 
+  var cacheProperties = fabric.Object.prototype.cacheProperties.concat();
+  cacheProperties.push('path');
+
   /**
    * Path class
    * @class fabric.Path
@@ -66,6 +69,8 @@
      */
     minY: 0,
 
+    cacheProperties: cacheProperties,
+
     /**
      * Constructor
      * @param {Array|String} path Path data (sequence of coordinates and corresponding "command" tokens)
@@ -75,7 +80,9 @@
     initialize: function(path, options) {
       options = options || { };
 
-      this.setOptions(options);
+      if (options) {
+        this.setOptions(options);
+      }
 
       if (!path) {
         path = [];
@@ -100,6 +107,10 @@
 
       if (options.sourcePath) {
         this.setSourcePath(options.sourcePath);
+      }
+      if (this.objectCaching) {
+        this._createCacheCanvas();
+        this.setupState({ propertySet: 'cacheProperties' });
       }
     },
 
@@ -473,16 +484,11 @@
      * @return {Object} object representation of an instance
      */
     toObject: function(propertiesToInclude) {
-      var o = extend(this.callSuper('toObject', propertiesToInclude), {
-        path: this.path.map(function(item) { return item.slice() }),
-        pathOffset: this.pathOffset
+      var o = extend(this.callSuper('toObject', ['sourcePath', 'pathOffset'].concat(propertiesToInclude)), {
+        path: this.path.map(function(item) { return item.slice(); }),
+        top: this.top,
+        left: this.left,
       });
-      if (this.sourcePath) {
-        o.sourcePath = this.sourcePath;
-      }
-      if (this.transformMatrix) {
-        o.transformMatrix = this.transformMatrix;
-      }
       return o;
     },
 
@@ -678,8 +684,6 @@
             break;
 
           case 'C': // bezierCurveTo, absolute
-            x = current[5];
-            y = current[6];
             controlX = current[3];
             controlY = current[4];
             bounds = fabric.util.getBoundsOfCurve(x, y,
@@ -687,9 +691,11 @@
               current[2],
               controlX,
               controlY,
-              x,
-              y
+              current[5],
+              current[6]
             );
+            x = current[5];
+            y = current[6];
             break;
 
           case 's': // shorthand cubic bezierCurveTo, relative
@@ -918,27 +924,10 @@
    * @memberOf fabric.Path
    * @param {Object} object
    * @param {Function} [callback] Callback to invoke when an fabric.Path instance is created
+   * @param {Boolean} [forceAsync] Force an async behaviour trying to create pattern first
    */
-  fabric.Path.fromObject = function(object, callback) {
-    // remove this pattern rom 2.0, accept just object.
-    var path;
-    if (typeof object.path === 'string') {
-      fabric.loadSVGFromURL(object.path, function (elements) {
-        var pathUrl = object.path;
-        path = elements[0];
-        delete object.path;
-
-        fabric.util.object.extend(path, object);
-        path.setSourcePath(pathUrl);
-
-        callback && callback(path);
-      });
-    }
-    else {
-      path = new fabric.Path(object.path, object);
-      callback && callback(path);
-      return path;
-    }
+  fabric.Path.fromObject = function(object, callback, forceAsync) {
+    return fabric.Object._fromObject('Path', object, callback, forceAsync, 'path');
   };
 
   /* _FROM_SVG_START_ */

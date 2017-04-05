@@ -3,10 +3,10 @@
   // var emptyImageCanvasData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0CAYAAADL1t+KAAAH7ElEQVR4nO3VMQ0AMAzAsPInvYHoMS2yEeTLHADge/M6AADYM3QACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIMHQACDB0AAgwdAAIuMjH4b7osLFBAAAAAElFTkSuQmCC";
 
   var CANVAS_SVG = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n' +
-                   '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="600" height="600" viewBox="0 0 600 600" xml:space="preserve">\n<desc>Created with Fabric.js ' + fabric.version + '</desc>\n<defs></defs>\n</svg>';
+                   '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="600" height="600" viewBox="0 0 600 600" xml:space="preserve">\n<desc>Created with Fabric.js ' + fabric.version + '</desc>\n<defs>\n</defs>\n</svg>';
 
   var CANVAS_SVG_VIEWBOX = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n' +
-                           '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="600" height="600" viewBox="100 100 300 300" xml:space="preserve">\n<desc>Created with Fabric.js ' + fabric.version + '</desc>\n<defs></defs>\n</svg>';
+                           '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="600" height="600" viewBox="100 100 300 300" xml:space="preserve">\n<desc>Created with Fabric.js ' + fabric.version + '</desc>\n<defs>\n</defs>\n</svg>';
 
   var PATH_JSON = '{"objects": [{"type": "path", "originX": "left", "originY": "top", "left": 268, "top": 266, "width": 51, "height": 49,' +
                   ' "fill": "rgb(0,0,0)", "stroke": null, "strokeWidth": 1, "scaleX": 1, "scaleY": 1, ' +
@@ -25,10 +25,25 @@
                   '["c", 0.877, -9.979, 2.893, -12.905, 4.942, -15.621], ["C", 17.878, 21.775, 18.713, 17.397, 18.511, ' +
                   '13.99], ["z", null]]}], "background": "#ff5555", "overlay":"rgba(0,0,0,0.2)"}';
 
+  var PATH_WITHOUT_DEFAULTS_JSON = '{"objects": [{"type": "path", "left": 268, "top": 266, "width": 51, "height": 49, "path": [["M", 18.511, 13.99],' +
+                  ' ["c", 0, 0, -2.269, -4.487, -12.643, 4.411], ["c", 0, 0, 4.824, -14.161, 19.222, -9.059],' +
+                  ' ["l", 0.379, -2.1], ["c", -0.759, -0.405, -1.375, -1.139, -1.645, -2.117], ["c", -0.531, ' +
+                  '-1.864, 0.371, -3.854, 1.999, -4.453], ["c", 0.312, -0.118, 0.633, -0.169, 0.953, -0.169], ' +
+                  '["c", 1.299, 0, 2.514, 0.953, 2.936, 2.455], ["c", 0.522, 1.864, -0.372, 3.854, -1.999, ' +
+                  '4.453], ["c", -0.229, 0.084, -0.464, 0.127, -0.692, 0.152], ["l", -0.379, 2.37], ["c", ' +
+                  '1.146, 0.625, 2.024, 1.569, 2.674, 2.758], ["c", 3.213, 2.514, 8.561, 4.184, 11.774, -8.232],' +
+                  ' ["c", 0, 0, 0.86, 16.059, -12.424, 14.533], ["c", 0.008, 2.859, 0.615, 5.364, -0.076, 8.224],' +
+                  ' ["c", 8.679, 3.146, 15.376, 14.389, 17.897, 18.168], ["l", 2.497, -2.151], ["l", 1.206, 1.839],' +
+                  ' ["l", -3.889, 3.458], ["C", 46.286, 48.503, 31.036, 32.225, 22.72, 35.81], ["c", -1.307, 2.851,' +
+                  ' -3.56, 6.891, -7.481, 8.848], ["c", -4.689, 2.336, -9.084, -0.802, -11.277, -2.868], ["l",' +
+                  ' -1.948, 3.104], ["l", -1.628, -1.333], ["l", 3.138, -4.689], ["c", 0.025, 0, 9, 1.932, 9, 1.932], ' +
+                  '["c", 0.877, -9.979, 2.893, -12.905, 4.942, -15.621], ["C", 17.878, 21.775, 18.713, 17.397, 18.511, ' +
+                  '13.99], ["z", null]]}], "background": "#ff5555","overlay": "rgba(0,0,0,0.2)"}';
+
   var PATH_DATALESS_JSON = '{"objects":[{"type":"path","originX":"left","originY":"top","left":100,"top":100,"width":200,"height":200,"fill":"rgb(0,0,0)",' +
                            '"stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,' +
                            '"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,' +
-                           '"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"path":"http://example.com/","pathOffset":{"x":200,"y":200}}],"background":""}';
+                           '"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"pathOffset":{"x":200,"y":200},"path":"http://example.com/"}]}';
 
   var RECT_JSON = '{"objects":[{"type":"rect","originX":"left","originY":"top","left":0,"top":0,"width":10,"height":10,"fill":"rgb(0,0,0)",' +
                   '"stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,' +
@@ -38,11 +53,11 @@
   var RECT_JSON_WITH_PADDING = '{"objects":[{"type":"rect","originX":"left","originY":"top","left":0,"top":0,"width":10,"height":20,"fill":"rgb(0,0,0)",' +
                                '"stroke":null,"strokeWidth":1,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,' +
                                '"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,' +
-                               '"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"padding":123,"foo":"bar","rx":0,"ry":0}],"background":""}';
+                               '"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"rx":0,"ry":0,"padding":123,"foo":"bar"}]}';
 
   function getAbsolutePath(path) {
     var isAbsolute = /^https?:/.test(path);
-    if (isAbsolute) { return path };
+    if (isAbsolute) { return path; };
     var imgEl = _createImageElement();
     imgEl.src = path;
     var src = imgEl.src;
@@ -94,7 +109,7 @@
   };
 
   function _createImageElement() {
-    return fabric.isLikelyNode ? new (require('canvas').Image)() : fabric.document.createElement('img');
+    return fabric.isLikelyNode ? new (require(fabric.canvasModule).Image)() : fabric.document.createElement('img');
   }
 
   function _createImageObject(width, height, callback) {
@@ -113,7 +128,7 @@
   function setSrc(img, src, callback) {
     if (fabric.isLikelyNode) {
       require('fs').readFile(src, function(err, imgData) {
-        if (err) { throw err };
+        if (err) { throw err; };
         img.src = imgData;
         img._src = src;
         callback && callback();
@@ -140,7 +155,8 @@
   var Canvas = fabric.Canvas;
   fabric.Canvas = null;
   var el = fabric.document.createElement('canvas');
-  el.width = 600; el.height = 600;
+  el.width = 600;
+  el.height = 600;
 
   var canvas = this.canvas = fabric.isLikelyNode ? fabric.createCanvasForNode() : new fabric.StaticCanvas(el),
       canvas2 = this.canvas2 = fabric.isLikelyNode ? fabric.createCanvasForNode() : new fabric.StaticCanvas(el);
@@ -180,7 +196,7 @@
     ok('overlayVpt' in canvas);
 
     equal(canvas.includeDefaultValues, true);
-    equal(canvas.stateful, true);
+    equal(canvas.stateful, false);
     equal(canvas.renderOnAddRemove, true);
     equal(canvas.controlsAboveOverlay, false);
     equal(canvas.allowTouchScrolling, false);
@@ -486,6 +502,23 @@
     }
   });
 
+  test('toDataURL cropping', function() {
+    ok(typeof canvas.toDataURL == 'function');
+    if (!fabric.Canvas.supports('toDataURL')) {
+      window.alert('toDataURL is not supported by this environment. Some of the tests can not be run.');
+    }
+    else {
+      var croppingWidth = 75,
+          croppingHeight = 50,
+          dataURL = canvas.toDataURL({width: croppingWidth, height: croppingHeight});
+
+      fabric.Image.fromURL(dataURL, function (img) {
+        equal(img.width, croppingWidth, 'Width of exported image should correspond to cropping width');
+        equal(img.height, croppingHeight, 'Height of exported image should correspond to cropping height');
+      });
+    }
+  });
+
   test('centerObjectH', function() {
     ok(typeof canvas.centerObjectH == 'function');
     var rect = makeRect({ left: 102, top: 202 });
@@ -743,7 +776,7 @@
 
   test('toJSON', function() {
     ok(typeof canvas.toJSON == 'function');
-    equal(JSON.stringify(canvas.toJSON()), '{"objects":[],"background":""}');
+    equal(JSON.stringify(canvas.toJSON()), '{"objects":[]}');
     canvas.backgroundColor = '#ff5555';
     canvas.overlayColor = 'rgba(0,0,0,0.2)';
     equal(JSON.stringify(canvas.toJSON()), '{"objects":[],"background":"#ff5555","overlay":"rgba(0,0,0,0.2)"}', '`background` and `overlay` value should be reflected in json');
@@ -834,7 +867,6 @@
   test('toObject', function() {
     ok(typeof canvas.toObject == 'function');
     var expectedObject = {
-      background: canvas.backgroundColor,
       objects: canvas.getObjects()
     };
     deepEqual(expectedObject, canvas.toObject());
@@ -843,6 +875,16 @@
     canvas.add(rect);
 
     equal(canvas.toObject().objects[0].type, rect.type);
+  });
+
+  test('toObject non includeDefaultValues', function() {
+    canvas.includeDefaultValues = false;
+    var rect = makeRect();
+    canvas.add(rect);
+    var cObject = canvas.toObject();
+    var expectedRect = { type: 'rect', width: 10, height: 10 };
+    deepEqual(cObject.objects[0], expectedRect, 'Rect should be exported withoud defaults');
+    canvas.includeDefaultValues = true;
   });
 
   test('toObject excludeFromExport', function() {
@@ -859,7 +901,6 @@
   test('toDatalessObject', function() {
     ok(typeof canvas.toDatalessObject == 'function');
     var expectedObject = {
-      background: canvas.backgroundColor,
       objects: canvas.getObjects()
     };
     deepEqual(expectedObject, canvas.toDatalessObject());
@@ -877,7 +918,6 @@
     canvas.foobar = 123;
 
     var expectedObject = {
-      background: canvas.backgroundColor,
       objects: canvas.getObjects(),
       freeDrawingColor: 'red',
       foobar: 123
@@ -898,7 +938,7 @@
     ok(!canvas.isEmpty());
   });
 
-  test('loadFromJSON with json string', function() {
+  asyncTest('loadFromJSON with json string staticCanvas', function() {
     ok(typeof canvas.loadFromJSON == 'function');
 
     canvas.loadFromJSON(PATH_JSON, function(){
@@ -913,20 +953,20 @@
       equal(obj.get('width'), 49.803999999999995);
       equal(obj.get('height'), 48.027);
       equal(obj.get('fill'), 'rgb(0,0,0)');
-      equal(obj.get('stroke'), null);
-      equal(obj.get('strokeWidth'), 1);
-      equal(obj.get('scaleX'), 1);
-      equal(obj.get('scaleY'), 1);
-      equal(obj.get('angle'), 0);
-      equal(obj.get('flipX'), false);
-      equal(obj.get('flipY'), false);
-      equal(obj.get('opacity'), 1);
-
+      strictEqual(obj.get('stroke'), null);
+      strictEqual(obj.get('strokeWidth'), 1);
+      strictEqual(obj.get('scaleX'), 1);
+      strictEqual(obj.get('scaleY'), 1);
+      strictEqual(obj.get('angle'), 0);
+      strictEqual(obj.get('flipX'), false);
+      strictEqual(obj.get('flipY'), false);
+      strictEqual(obj.get('opacity'), 1);
       ok(obj.get('path').length > 0);
+      start();
     });
   });
 
-  test('loadFromJSON with json object', function() {
+  asyncTest('loadFromJSON with json object', function() {
     ok(typeof canvas.loadFromJSON == 'function');
 
     canvas.loadFromJSON(JSON.parse(PATH_JSON), function(){
@@ -942,16 +982,47 @@
       equal(obj.get('width'), 49.803999999999995);
       equal(obj.get('height'), 48.027);
       equal(obj.get('fill'), 'rgb(0,0,0)');
-      equal(obj.get('stroke'), null);
-      equal(obj.get('strokeWidth'), 1);
-      equal(obj.get('scaleX'), 1);
-      equal(obj.get('scaleY'), 1);
-      equal(obj.get('angle'), 0);
-      equal(obj.get('flipX'), false);
-      equal(obj.get('flipY'), false);
-      equal(obj.get('opacity'), 1);
+      strictEqual(obj.get('stroke'), null);
+      strictEqual(obj.get('strokeWidth'), 1);
+      strictEqual(obj.get('scaleX'), 1);
+      strictEqual(obj.get('scaleY'), 1);
+      strictEqual(obj.get('angle'), 0);
+      strictEqual(obj.get('flipX'), false);
+      strictEqual(obj.get('flipY'), false);
+      strictEqual(obj.get('opacity'), 1);
 
       ok(obj.get('path').length > 0);
+      start();
+    });
+  });
+
+  asyncTest('loadFromJSON with json object without default values', function() {
+    ok(typeof canvas.loadFromJSON == 'function');
+
+    canvas.loadFromJSON(JSON.parse(PATH_WITHOUT_DEFAULTS_JSON), function(){
+      var obj = canvas.item(0);
+
+      ok(!canvas.isEmpty(), 'canvas is not empty');
+      equal(obj.type, 'path', 'first object is a path object');
+      equal(canvas.backgroundColor, '#ff5555', 'backgroundColor is populated properly');
+      equal(canvas.overlayColor, 'rgba(0,0,0,0.2)', 'overlayColor is populated properly');
+
+      equal(obj.get('left'), 268);
+      equal(obj.get('top'), 266);
+      equal(obj.get('width'), 49.803999999999995);
+      equal(obj.get('height'), 48.027);
+      equal(obj.get('fill'), 'rgb(0,0,0)');
+      strictEqual(obj.get('stroke'), null);
+      strictEqual(obj.get('strokeWidth'), 1);
+      strictEqual(obj.get('scaleX'), 1);
+      strictEqual(obj.get('scaleY'), 1);
+      strictEqual(obj.get('angle'), 0);
+      strictEqual(obj.get('flipX'), false);
+      strictEqual(obj.get('flipY'), false);
+      strictEqual(obj.get('opacity'), 1);
+
+      ok(obj.get('path').length > 0);
+      start();
     });
   });
 
@@ -967,7 +1038,7 @@
     });
   });
 
-  test('loadFromJSON custom properties', function() {
+  asyncTest('loadFromJSON custom properties', function() {
     var rect = new fabric.Rect({ width: 10, height: 20 });
     rect.padding = 123;
     rect.foo = 'bar';
@@ -986,6 +1057,7 @@
 
       equal(obj.padding, 123, 'padding on object is set properly');
       equal(obj.foo, 'bar', '"foo" property on object is set properly');
+      start();
     });
   });
 
@@ -1372,7 +1444,7 @@
   });
 
   test('relativePan', function() {
-    ok(typeof canvas.relativePan == 'function');
+    ok(typeof canvas.relativePan === 'function');
     deepEqual(canvas.viewportTransform, [1, 0, 0, 1, 0, 0], 'initial viewport is identity matrix');
     var point = new fabric.Point(-50, -50);
     canvas.relativePan(point);
@@ -1382,22 +1454,37 @@
     canvas.viewportTransform = fabric.StaticCanvas.prototype.viewportTransform;
   });
 
-  test('getActiveObject', function() {
-    ok(typeof canvas.getActiveObject == 'function');
-    var activeObject = canvas.getActiveObject();
-    equal(activeObject, null, 'should return null');
-  });
-
-  test('getActiveGroup', function() {
-    ok(typeof canvas.getActiveGroup == 'function');
-    var activeGroup = canvas.getActiveGroup();
-    equal(activeGroup, null, 'should return null');
-  });
-
   test('getContext', function() {
-    ok(typeof canvas.getContext == 'function');
+    ok(typeof canvas.getContext === 'function');
     var context = canvas.getContext();
     equal(context, canvas.contextContainer, 'should return the context container');
+  });
+
+  test('calcViewportBoundaries', function() {
+    ok(typeof canvas.calcViewportBoundaries === 'function');
+    canvas.calcViewportBoundaries();
+    deepEqual(canvas.vptCoords.tl, new fabric.Point(0, 0), 'tl is 0,0');
+    deepEqual(canvas.vptCoords.tr, new fabric.Point(canvas.getWidth(), 0), 'tr is width, 0');
+    deepEqual(canvas.vptCoords.bl, new fabric.Point(0, canvas.getHeight()), 'bl is 0, height');
+    deepEqual(canvas.vptCoords.br, new fabric.Point(canvas.getWidth(), canvas.getHeight()), 'tl is width, height');
+  });
+
+  test('calcViewportBoundaries with zoom', function() {
+    ok(typeof canvas.calcViewportBoundaries === 'function');
+    canvas.setViewportTransform([2, 0, 0, 2, 0, 0]);
+    deepEqual(canvas.vptCoords.tl, new fabric.Point(0, 0), 'tl is 0,0');
+    deepEqual(canvas.vptCoords.tr, new fabric.Point(canvas.getWidth() / 2, 0), 'tl is 0,0');
+    deepEqual(canvas.vptCoords.bl, new fabric.Point(0, canvas.getHeight() / 2), 'tl is 0,0');
+    deepEqual(canvas.vptCoords.br, new fabric.Point(canvas.getWidth() / 2, canvas.getHeight() / 2), 'tl is 0,0');
+  });
+
+  test('calcViewportBoundaries with zoom and translation', function() {
+    ok(typeof canvas.calcViewportBoundaries === 'function');
+    canvas.setViewportTransform([2, 0, 0, 2, -60, 60]);
+    deepEqual(canvas.vptCoords.tl, new fabric.Point(30, -30), 'tl is 0,0');
+    deepEqual(canvas.vptCoords.tr, new fabric.Point(30 + canvas.getWidth() / 2, -30), 'tl is 0,0');
+    deepEqual(canvas.vptCoords.bl, new fabric.Point(30, canvas.getHeight() / 2 - 30), 'tl is 0,0');
+    deepEqual(canvas.vptCoords.br, new fabric.Point(30 + canvas.getWidth() / 2, canvas.getHeight() / 2 - 30), 'tl is 0,0');
   });
 
   //how to test with an exception?
